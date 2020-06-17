@@ -19,6 +19,7 @@ public class UserService {
      * ====================
      */
     @HystrixCommand(fallbackMethod = "$getUserInfo", commandProperties = {
+            @HystrixProperty(name = "execution.timeout.enabled", value = "true"),
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")}
     )
     public UserInfo getUser(Long userId) {
@@ -26,7 +27,7 @@ public class UserService {
         try {
             TimeUnit.SECONDS.sleep(10);
         } catch (InterruptedException ex) {
-            ex.printStackTrace();
+           // ex.printStackTrace();
         }
 
         UserInfo user = new UserInfo();
@@ -35,7 +36,8 @@ public class UserService {
         return user;
     }
 
-    public UserInfo $getUserInfo(Long userId, Throwable cause) {
+    public UserInfo $getUserInfo(Long userId, Throwable ex) {
+        log.error("", ex);
         return null;
     }
 

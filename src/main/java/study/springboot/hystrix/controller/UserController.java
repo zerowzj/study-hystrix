@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import study.springboot.hystrix.service.user.User;
+import study.springboot.hystrix.service.user.UserInfo;
 import study.springboot.hystrix.service.user.UserService;
 import study.springboot.hystrix.support.result.Result;
 
@@ -19,13 +19,15 @@ public class UserController {
 
     @GetMapping("/getUser")
     public Result getUser(String name) {
-        User user = userService.getUser("");
+        log.info("aaaaaaaaa");
+        UserInfo user = userService.getUser(null);
+        log.info("bbbbbbbbbbb");
         return new Result(user);
     }
 
-    @GetMapping("/getUser")
+    @GetMapping("/getUserByAsync")
     public Result getUserByAsync(String name) {
-        Future<User> future = userService.getUserByAsync("");
+        Future<UserInfo> future = userService.getUserByAsync("");
         return new Result();
     }
 }

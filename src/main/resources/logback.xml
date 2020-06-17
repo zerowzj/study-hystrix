@@ -2,7 +2,7 @@
 <configuration>
 
     <property name="LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss} [%thread] [%5level] [%class{1}:%line] [%X{request_id:-}] [%X{uri:-aaa}] - %m%n"/>
+              value="%d{yyyy-MM-dd HH:mm:ss} [%thread] [%5level] [%class{1}:%line] [%X{request_id:-}] [%X{uri:-}] - %m%n"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

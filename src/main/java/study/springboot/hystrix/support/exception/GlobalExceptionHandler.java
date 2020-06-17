@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     //这里也可以返回 ModelAndView 导向错误视图
     @ExceptionHandler(Throwable.class)
     public Map<String, Object> resolveException(Exception ex) {
-//        ex.printStackTrace();
+        ex.printStackTrace();
         log.info("======> GlobalExceptionHandler");
         Map<String, Object> data = Maps.newHashMap();
         data.put("code", "9999");

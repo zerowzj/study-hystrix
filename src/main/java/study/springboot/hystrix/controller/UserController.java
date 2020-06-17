@@ -8,8 +8,6 @@ import study.springboot.hystrix.service.user.UserInfo;
 import study.springboot.hystrix.service.user.UserService;
 import study.springboot.hystrix.support.result.Result;
 
-import java.util.concurrent.Future;
-
 @Slf4j
 @RestController
 public class UserController {
@@ -26,8 +24,8 @@ public class UserController {
     }
 
     @GetMapping("/getUserByAsync")
-    public Result getUserByAsync(String name) {
-        Future<UserInfo> future = userService.getUserByAsync("");
+    public Result getUserByAsync(String name) throws Exception {
+        UserInfo userInfo = userService.getUserByAsync("").get();
         return new Result();
     }
 }

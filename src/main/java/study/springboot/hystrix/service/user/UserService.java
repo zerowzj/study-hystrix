@@ -1,5 +1,6 @@
 package study.springboot.hystrix.service.user;
 
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.netflix.hystrix.contrib.javanica.command.AsyncResult;
@@ -11,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service("userService")
+@DefaultProperties
 public class UserService {
 
     /**
@@ -18,16 +20,16 @@ public class UserService {
      * 同步执行
      * ====================
      */
-    @HystrixCommand(fallbackMethod = "$getUserInfo", commandProperties = {
-            @HystrixProperty(name = "execution.timeout.enabled", value = "true"),
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")}
+    @HystrixCommand(fallbackMethod = "$getUserInfo",
+            commandProperties = {@HystrixProperty(name = "execution.timeout.enabled", value = "true"),
+                    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")}
     )
     public UserInfo getUser(Long userId) {
         log.info("fffffffffff");
         try {
             TimeUnit.SECONDS.sleep(10);
         } catch (InterruptedException ex) {
-           // ex.printStackTrace();
+            // ex.printStackTrace();
         }
 
         UserInfo user = new UserInfo();
@@ -36,8 +38,13 @@ public class UserService {
         return user;
     }
 
+    /**
+     * （1）fallback应该和注解方法在同一类下
+     * （2）fallback的返回值和参数列表应该和注解方法一致，如果需要异常，则在末尾添加Throwable参数
+     * （3）fallback方法上可以继续添加fallback
+     */
     public UserInfo $getUserInfo(Long userId, Throwable ex) {
-        log.error("", ex);
+        log.error("fasdfasdfasd", ex);
         return null;
     }
 
@@ -48,13 +55,18 @@ public class UserService {
      */
     @HystrixCommand
     public Future<UserInfo> getUserByAsync(final String userId) {
-        return new AsyncResult<UserInfo>() {
+        Future<UserInfo> future = new AsyncResult<UserInfo>() {
             @Override
             public UserInfo invoke() {
                 log.info("fffffffffffffff");
+                try {
+                    TimeUnit.SECONDS.sleep(5);
+                } catch (Exception ex) {
+                }
                 return new UserInfo();
             }
         };
+        return future;
     }
 
     /**

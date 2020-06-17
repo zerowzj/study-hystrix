@@ -1,0 +1,13 @@
+#
+server:
+  port: 7000
+#
+logging:
+  config: classpath:logback.xml
+#
+spring:
+  application:
+    name: study-hystrix
+  main:
+    web-application-type: servlet
+    banner-mode: 'off'

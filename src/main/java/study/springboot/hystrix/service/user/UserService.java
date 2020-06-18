@@ -6,6 +6,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.netflix.hystrix.contrib.javanica.command.AsyncResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import study.springboot.hystrix.support.Sleeps;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -17,12 +18,8 @@ public class UserService {
 
     public UserInfo getUserInfo(String userId) {
         log.info(">>>>>> {}", userId);
-        try {
-            TimeUnit.SECONDS.sleep(10);
-            Thread.sleep(111);
-        } catch (InterruptedException ex) {
-            // ex.printStackTrace();
-        }
+        Sleeps.seconds(3);
+
         UserInfo user = new UserInfo();
         user.setUserId("900001");
         user.setUserName("test1");
@@ -39,11 +36,7 @@ public class UserService {
             @HystrixProperty(name = "fallback.enabled", value = "true")})
     public UserInfo getUserInfoBySync(String userId) {
         log.info(">>>>>> {}", userId);
-        try {
-            TimeUnit.SECONDS.sleep(10);
-        } catch (InterruptedException ex) {
-            // ex.printStackTrace();
-        }
+        Sleeps.seconds(10);
 
         UserInfo user = new UserInfo();
         user.setUserId("900001");

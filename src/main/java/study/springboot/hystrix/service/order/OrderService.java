@@ -14,7 +14,6 @@ public class OrderService {
 
     @HystrixCommand(commandProperties = {
             @HystrixProperty(name = "execution.isolation.strategy", value = "THREAD"),
-            @HystrixProperty(name = "execution.timeout.enabled", value = "true"),
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "60000"),
             @HystrixProperty(name = "execution.isolation.thread.interruptOnTimeout", value = "true"),
             @HystrixProperty(name = "execution.isolation.thread.interruptOnCancel", value = "true"),

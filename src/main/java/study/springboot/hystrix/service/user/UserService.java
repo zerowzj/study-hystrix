@@ -35,8 +35,8 @@ public class UserService {
      * ====================
      */
     @HystrixCommand(commandProperties = {
-            @HystrixProperty(name = "circuitBreaker.enabled", value = "false"),
-            @HystrixProperty(name = "circuitBreaker.forceClosed", value = "false")})
+            @HystrixProperty(name = "execution.timeout.enabled", value = "true"),
+            @HystrixProperty(name = "fallback.enabled", value = "true")})
     public UserInfo getUserInfoBySync(String userId) {
         log.info(">>>>>> {}", userId);
         try {

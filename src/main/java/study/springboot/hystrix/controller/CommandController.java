@@ -36,8 +36,8 @@ public class CommandController {
     }
 
     @GetMapping("/getByAsync")
-    public Result getUserInfoByAsync(String userId) throws Exception {
-//        UserInfo userInfo = commandService.getUserInfoByAsync(userId).get();
+    public Result getUserInfoByAsync() throws Exception {
+        commandService.getByAsync(1L);
         return Results.success();
     }
 }

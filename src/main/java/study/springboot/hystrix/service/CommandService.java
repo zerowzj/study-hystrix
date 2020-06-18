@@ -2,12 +2,15 @@ package study.springboot.hystrix.service;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.netflix.hystrix.contrib.javanica.command.AsyncResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import study.springboot.hystrix.support.Sleeps;
 import study.springboot.hystrix.support.result.Results;
 
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 @Slf4j
 @Service("commandService")
@@ -42,26 +45,39 @@ public class CommandService {
         return null;
     }
 
-//    /**
-//     * ====================
-//     * （★）异步执行
-//     * ====================
-//     */
-//    @HystrixCommand
-//    public Future<Map<String, Object>> getUserInfoByAsync(final String userId) {
-//        Future<UserInfo> future = new AsyncResult<UserInfo>() {
-//            @Override
-//            public UserInfo invoke() {
-//                log.info("fffffffffffffff");
-//                try {
-//                    TimeUnit.SECONDS.sleep(5);
-//                } catch (Exception ex) {
-//                }
-//                return new UserInfo();
-//            }
-//        };
-//        return future;
-//    }
+    /**
+     * ====================
+     * （★）异步执行
+     * ====================
+     */
+    public void getByAsync(Long timeout) {
+        try {
+            doByAsync(5L).get();
+            doByAsync(8L).get();
+        } catch (InterruptedException | ExecutionException ex) {
+
+        }
+    }
+
+    @HystrixCommand
+    public Future<Map<String, Object>> doByAsync(Long timeout) {
+        log.info("ffffffffffffffff");
+        Future<Map<String, Object>> future = new AsyncResult<Map<String, Object>>() {
+            @Override
+            public Map<String, Object> invoke() {
+                log.info("fffffffffffffff");
+                Sleeps.seconds(timeout);
+                return null;
+            }
+
+            @Override
+            public Map<String, Object> get() throws UnsupportedOperationException {
+                return invoke();
+            }
+        };
+        return future;
+    }
+
 
     /**
      * ====================

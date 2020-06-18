@@ -1,5 +1,6 @@
 package study.springboot.hystrix.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import java.util.Map;
 
 @Slf4j
 @Service("fallbackService")
+@DefaultProperties(defaultFallback = "tt")
 public class FallbackService {
 
     @HystrixCommand(commandProperties = {
@@ -31,5 +33,10 @@ public class FallbackService {
 
         Map<String, Object> data = Results.data();
         return data;
+    }
+
+    public Object tt(Throwable ex){
+        log.error("123123", ex);
+        return null;
     }
 }

@@ -1,6 +1,5 @@
 package study.springboot.hystrix.service;
 
-import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +11,9 @@ import java.util.Map;
 
 @Slf4j
 @Service("fallbackService")
-@DefaultProperties(defaultFallback = "tt")
 public class FallbackService {
 
-    @HystrixCommand(commandProperties = {
+    @HystrixCommand(fallbackMethod = "tt", commandProperties = {
             @HystrixProperty(name = "fallback.enabled", value = "true"),
             @HystrixProperty(name = "execution.timeout.enabled", value = "true")})
     public Map<String, Object> timeout(Long timeout) {
@@ -35,7 +33,7 @@ public class FallbackService {
         return data;
     }
 
-    public Object tt(Throwable ex){
+    public Map<String, Object> tt(Long timeout, Throwable ex){
         log.error("123123", ex);
         return null;
     }

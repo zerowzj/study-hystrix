@@ -15,17 +15,25 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/getUser")
-    public Result getUser(String name) {
+    @GetMapping("/getUserInfo")
+    public Result getUserInfo(String userId) {
         log.info("aaaaaaaaa");
-        UserInfo user = userService.getUser(null);
+        UserInfo userInfo = userService.getUserInfo(userId);
         log.info("bbbbbbbbbbb");
-        return new Result(user);
+        return new Result(userInfo);
     }
 
-    @GetMapping("/getUserByAsync")
-    public Result getUserByAsync(String name) throws Exception {
-        UserInfo userInfo = userService.getUserByAsync("").get();
+    @GetMapping("/getUserInfoBySync")
+    public Result getUserInfoBySync(String userId) {
+        log.info("aaaaaaaaa");
+        UserInfo userInfo = userService.getUserInfoBySync(userId);
+        log.info("bbbbbbbbbbb");
+        return new Result(userInfo);
+    }
+
+    @GetMapping("/getUserInfoByAsync")
+    public Result getUserInfoByAsync(String userId) throws Exception {
+        UserInfo userInfo = userService.getUserInfoByAsync(userId).get();
         return new Result();
     }
 }

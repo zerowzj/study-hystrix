@@ -2,7 +2,6 @@ package study.springboot.hystrix.service.user;
 
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.netflix.hystrix.contrib.javanica.command.AsyncResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,17 +14,27 @@ import java.util.concurrent.TimeUnit;
 @DefaultProperties
 public class UserService {
 
+    public UserInfo getUserInfo(String userId) {
+        log.info(">>>>>> {}", userId);
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException ex) {
+            // ex.printStackTrace();
+        }
+        UserInfo user = new UserInfo();
+        user.setUserId("900001");
+        user.setUserName("test1");
+        return user;
+    }
+
     /**
      * ====================
      * 同步执行
      * ====================
      */
-    @HystrixCommand(fallbackMethod = "$getUserInfo",
-            commandProperties = {@HystrixProperty(name = "execution.timeout.enabled", value = "true"),
-                    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")}
-    )
-    public UserInfo getUser(Long userId) {
-        log.info("fffffffffff");
+    @HystrixCommand
+    public UserInfo getUserInfoBySync(String userId) {
+        log.info(">>>>>> {}", userId);
         try {
             TimeUnit.SECONDS.sleep(10);
         } catch (InterruptedException ex) {
@@ -33,7 +42,7 @@ public class UserService {
         }
 
         UserInfo user = new UserInfo();
-        user.setUserId(900001L);
+        user.setUserId("900001");
         user.setUserName("test1");
         return user;
     }
@@ -43,7 +52,7 @@ public class UserService {
      * （2）fallback的返回值和参数列表应该和注解方法一致，如果需要异常，则在末尾添加Throwable参数
      * （3）fallback方法上可以继续添加fallback
      */
-    public UserInfo $getUserInfo(Long userId, Throwable ex) {
+    public UserInfo $getUserInfo(String userId, Throwable ex) {
         log.error("fasdfasdfasd", ex);
         return null;
     }
@@ -54,7 +63,7 @@ public class UserService {
      * ====================
      */
     @HystrixCommand
-    public Future<UserInfo> getUserByAsync(final String userId) {
+    public Future<UserInfo> getUserInfoByAsync(final String userId) {
         Future<UserInfo> future = new AsyncResult<UserInfo>() {
             @Override
             public UserInfo invoke() {

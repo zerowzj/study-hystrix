@@ -5,6 +5,9 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import study.springboot.hystrix.support.Sleeps;
+import study.springboot.hystrix.support.result.Results;
+
+import java.util.Map;
 
 @Slf4j
 @Service("fallbackService")
@@ -13,18 +16,20 @@ public class FallbackService {
     @HystrixCommand(commandProperties = {
             @HystrixProperty(name = "fallback.enabled", value = "true"),
             @HystrixProperty(name = "execution.timeout.enabled", value = "true")})
-    public void timeout(Long timeout) {
+    public Map<String, Object> timeout(Long timeout) {
+        log.info("");
         Sleeps.seconds(timeout);
+
+        return Results.data();
     }
 
-    @HystrixCommand(commandProperties = {
-            @HystrixProperty(name = "fallback.enabled", value = "true"),
-            @HystrixProperty(name = "", value = "")})
-    public void exception() {
+    @HystrixCommand(ignoreExceptions = {RuntimeException.class},
+            commandProperties = {
+                    @HystrixProperty(name = "fallback.enabled", value = "true")})
+    public Map<String, Object> exception() {
+        log.info("");
 
-    }
-
-    public void defaultFallback() {
-
+        Map<String, Object> data = Results.data();
+        return data;
     }
 }

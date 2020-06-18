@@ -13,13 +13,17 @@ public class Result<T> {
 
     private T data;
 
-    public Result() {
-        this.code = "0000";
-        this.desc = "成功";
+    Result() {
+        this("0000", "成功");
     }
 
-    public Result(T data) {
+    Result(T data) {
         this();
         this.data = data;
+    }
+
+    Result(String code, String desc) {
+        this.code = code;
+        this.desc = desc;
     }
 }

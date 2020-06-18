@@ -12,7 +12,8 @@ import java.util.List;
 @Service("orderService")
 public class OrderService {
 
-    @HystrixCommand(commandProperties = {@HystrixProperty(name = "execution.isolation.strategy", value = "THREAD"),
+    @HystrixCommand(commandProperties = {
+            @HystrixProperty(name = "execution.isolation.strategy", value = "THREAD"),
             @HystrixProperty(name = "execution.timeout.enabled", value = "true"),
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "60000"),
             @HystrixProperty(name = "execution.isolation.thread.interruptOnTimeout", value = "true"),
@@ -26,7 +27,8 @@ public class OrderService {
         return orderInfo;
     }
 
-    @HystrixCommand(threadPoolProperties = {@HystrixProperty(name = "coreSize", value = "10"),
+    @HystrixCommand(threadPoolKey = "order", threadPoolProperties = {
+            @HystrixProperty(name = "coreSize", value = "10"),
             @HystrixProperty(name = "allowMaximumSizeToDivergeFromCoreSize", value = "false"),
             @HystrixProperty(name = "maximumSize", value = "20"),
             @HystrixProperty(name = "maxQueueSize", value = "-1"),

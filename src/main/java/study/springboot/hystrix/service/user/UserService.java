@@ -2,6 +2,7 @@ package study.springboot.hystrix.service.user;
 
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.netflix.hystrix.contrib.javanica.command.AsyncResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class UserService {
         log.info(">>>>>> {}", userId);
         try {
             TimeUnit.SECONDS.sleep(10);
+            Thread.sleep(111);
         } catch (InterruptedException ex) {
             // ex.printStackTrace();
         }
@@ -32,7 +34,9 @@ public class UserService {
      * 同步执行
      * ====================
      */
-    @HystrixCommand
+    @HystrixCommand(commandProperties = {
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "false"),
+            @HystrixProperty(name = "circuitBreaker.forceClosed", value = "false")})
     public UserInfo getUserInfoBySync(String userId) {
         log.info(">>>>>> {}", userId);
         try {

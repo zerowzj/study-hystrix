@@ -112,23 +112,38 @@ Hystrix如何实现这些设计目标？
 
 ​		Hystrix 的命令属性是由 @HystrixProperty 注解数组构成的，HystrixProperty 由 name 和 value 两个属性，数据类型都是字符串。
 
-### 线程隔离
+### 配置项
+
+#### （1）执行策略
 
 - execution.isolation.strategy：配置请求隔离的方式，有 threadPool（线程池，默认）和 semaphore（信号量）两种，信号量方式高效但配置不灵活，我们一般采用 Java 里常用的线程池方式。
 - execution.timeout.enabled：是否给方法执行设置超时，默认为 true。
 - execution.isolation.thread.timeoutInMilliseconds：方法执行超时时间，默认值是 1000，即 1秒，此值根据业务场景配置。
-- execution.isolation.thread.interruptOnTimeout/interruptOnCancel：是否在方法执行超时/被取消时中断方法。需要注意在 JVM 中我们无法强制中断一个线程，如果 Hystrix 方法里没有处理中断信号的逻辑，那么中断会被忽略。
+- execution.isolation.thread.interruptOnTimeout：是否在方法执行超时时中断方法。需要注意在 JVM 中我们无法强制中断一个线程，如果 Hystrix 方法里没有处理中断信号的逻辑，那么中断会被忽略。
+- execution.isolation.thread.interruptOnCancel：是否在方法执行被取消时中断方法。
 - execution.isolation.semaphore.maxConcurrentRequests：默认值是 10，此配置项要在 execution.isolation.strategy 配置为 semaphore 时才会生效，它指定了一个 Hystrix 方法使用信号量隔离时的最大并发数，超过此并发数的请求会被拒绝。信号量隔离的配置就这么一个，也是前文说信号量隔离配置不灵活的原因。
 
-### 熔断器
+#### （2）熔断策略
 
 - circuitBreaker.enabled：是否启用熔断器，默认为 true;
-- circuitBreaker.forceOpen： circuitBreaker.forceClosed：是否强制启用/关闭熔断器，强制启用关闭都想不到什么应用的场景，保持默认值，不配置即可。
+- circuitBreaker.forceOpen：是否强制启用熔断器，强制启用都想不到什么应用的场景，保持默认值，不配置即可。
+- circuitBreaker.forceClosed：是否强制关闭熔断器，强制关闭都想不到什么应用的场景，保持默认值，不配置即可。
 - circuitBreaker.requestVolumeThreshold：启用熔断器功能窗口时间内的最小请求数。试想如果没有这么一个限制，我们配置了 50% 的请求失败会打开熔断器，窗口时间内只有 3 条请求，恰巧两条都失败了，那么熔断器就被打开了，5s 内的请求都被快速失败。此配置项的值需要根据接口的 QPS 进行计算，值太小会有误打开熔断器的可能，值太大超出了时间窗口内的总请求数，则熔断永远也不会被触发。建议设置为 QPS * 窗口秒数 * 60%。
 - circuitBreaker.errorThresholdPercentage：在通过滑动窗口获取到当前时间段内 Hystrix 方法执行的失败率后，就需要根据此配置来判断是否要将熔断器打开了。 此配置项默认值是 50，即窗口时间内超过 50% 的请求失败后会打开熔断器将后续请求快速失败。
 - circuitBreaker.sleepWindowInMilliseconds：熔断器打开后，所有的请求都会快速失败，但何时服务恢复正常就是下一个要面对的问题。熔断器打开时，Hystrix 会在经过一段时间后就放行一条请求，如果这条请求执行成功了，说明此时服务很可能已经恢复了正常，那么会将熔断器关闭，如果此请求执行失败，则认为服务依然不可用，熔断器继续保持打开状态。此配置项指定了熔断器打开后经过多长时间允许一次请求尝试执行，默认值是 5000。
 
-### 其他
+#### （3）回退策略
+
+- fallback.enabled：是否启用方法回退，默认为 true 即可。
+- fallback.isolation.semaphore.maxConcurrentRequests：回退方法执行时的最大并发数，默认是10，如果大量请求的回退方法被执行时，超出此并发数的请求会抛出 REJECTED_SEMAPHORE_FALLBACK 异常。
+
+#### （4）
+
+- requestLog.enabled：是否启用请求日志，默认为 true。
+
+- requestCache.enabled：是否启用请求结果缓存。默认是 true，但它并不意味着我们的每个请求都会被缓存。缓存请求结果和从缓存中获取结果都需要我们配置 cacheKey，并且在方法上使用 @CacheResult 注解声明一个缓存上下文。
+
+  
 
 ## 1.3 threadPoolProperties
 

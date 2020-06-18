@@ -13,11 +13,12 @@ import java.util.Map;
 @Service("fallbackService")
 public class FallbackService {
 
-    @HystrixCommand(fallbackMethod = "tt", commandProperties = {
-            @HystrixProperty(name = "fallback.enabled", value = "true"),
-            @HystrixProperty(name = "execution.timeout.enabled", value = "true")})
+    @HystrixCommand(fallbackMethod = "timeoutFallback",
+            commandProperties = {
+                    @HystrixProperty(name = "fallback.enabled", value = "true"),
+                    @HystrixProperty(name = "execution.timeout.enabled", value = "true")})
     public Map<String, Object> timeout(Long timeout) {
-        log.info("");
+//        log.info("");
         Sleeps.seconds(timeout);
 
         return Results.data();
@@ -33,7 +34,7 @@ public class FallbackService {
         return data;
     }
 
-    public Map<String, Object> tt(Long timeout, Throwable ex){
+    public Map<String, Object> timeoutFallback(Long timeout, Throwable ex) {
         log.error("123123", ex);
         return null;
     }

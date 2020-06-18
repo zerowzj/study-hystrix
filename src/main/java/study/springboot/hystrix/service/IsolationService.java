@@ -19,7 +19,12 @@ public class IsolationService {
             @HystrixProperty(name = "execution.isolation.thread.interruptOnCancel", value = "true")},
             threadPoolKey = "ttt",
             threadPoolProperties = {
-                    @HystrixProperty(name = "coreSize", value = "3")})
+                    @HystrixProperty(name = "coreSize", value = "10"),
+                    @HystrixProperty(name = "allowMaximumSizeToDivergeFromCoreSize", value = "false"),
+                    @HystrixProperty(name = "maximumSize", value = "20"),
+                    @HystrixProperty(name = "maxQueueSize", value = "-1"),
+                    @HystrixProperty(name = "queueSizeRejectionThreshold", value = ""),
+                    @HystrixProperty(name = "keepAliveTimeMinutes", value = "")})
     public Map<String, Object> useThread() {
         log.info("safadsfasdfsaf");
         return Results.data();

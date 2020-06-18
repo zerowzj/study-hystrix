@@ -12,18 +12,4 @@ import study.springboot.hystrix.support.result.Result;
 @RestController
 public class GoodsController {
 
-    @Autowired
-    private OrderService orderService;
-
-    @GetMapping("/getOrderInfo")
-    public Result getOrderInfo(String orderNo) {
-        log.info("aaaaaaaaa");
-        OrderInfo orderInfo = orderService.getOrderInfo(orderNo);
-        return new Result(orderInfo);
-    }
-
-    @GetMapping("/getOrderLt")
-    public Result getOrderLt(String name) throws Exception {
-        return new Result();
-    }
 }

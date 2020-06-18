@@ -116,8 +116,8 @@ Hystrix如何实现这些设计目标？
 
 #### （1）执行策略
 
-- execution.isolation.strategy：配置请求隔离的方式，有 threadPool（线程池，默认）和 semaphore（信号量）两种，信号量方式高效但配置不灵活，我们一般采用 Java 里常用的线程池方式。
 - execution.timeout.enabled：是否给方法执行设置超时，默认为 true。
+- execution.isolation.strategy：配置请求隔离的方式，有 threadPool（线程池，默认）和 semaphore（信号量）两种，信号量方式高效但配置不灵活，我们一般采用 Java 里常用的线程池方式。
 - execution.isolation.thread.timeoutInMilliseconds：方法执行超时时间，默认值是 1000，即 1秒，此值根据业务场景配置。
 - execution.isolation.thread.interruptOnTimeout：是否在方法执行超时时中断方法。需要注意在 JVM 中我们无法强制中断一个线程，如果 Hystrix 方法里没有处理中断信号的逻辑，那么中断会被忽略。
 - execution.isolation.thread.interruptOnCancel：是否在方法执行被取消时中断方法。
@@ -316,12 +316,4 @@ Hystrix 内线程池的使用是基于 Java 内置线程池的简单包装，通
 9. 234
 
 10. 
-
-    
-
-## 回退
-
-## 线程池
-
-## 断路器
 

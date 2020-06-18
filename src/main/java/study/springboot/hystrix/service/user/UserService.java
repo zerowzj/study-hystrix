@@ -1,6 +1,5 @@
 package study.springboot.hystrix.service.user;
 
-import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.netflix.hystrix.contrib.javanica.command.AsyncResult;
@@ -13,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service("userService")
-@DefaultProperties
 public class UserService {
 
     public UserInfo getUserInfo(String userId) {
@@ -28,7 +26,7 @@ public class UserService {
 
     /**
      * ====================
-     * 同步执行
+     * （★）同步执行
      * ====================
      */
     @HystrixCommand(commandProperties = {
@@ -56,7 +54,7 @@ public class UserService {
 
     /**
      * ====================
-     * 异步执行
+     * （★）异步执行
      * ====================
      */
     @HystrixCommand
@@ -77,7 +75,7 @@ public class UserService {
 
     /**
      * ====================
-     * 反应执行
+     * （★）反应执行
      * ====================
      */
 //    @HystrixCommand

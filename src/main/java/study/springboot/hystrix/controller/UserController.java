@@ -34,6 +34,6 @@ public class UserController {
     @GetMapping("/getUserInfoByAsync")
     public Result getUserInfoByAsync(String userId) throws Exception {
         UserInfo userInfo = userService.getUserInfoByAsync(userId).get();
-        return new Result();
+        return new Result(userInfo);
     }
 }
